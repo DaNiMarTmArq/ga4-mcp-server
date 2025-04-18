@@ -1,11 +1,11 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { GetReport, ReportRequest } from "../application/report";
+import { GetReport } from "../application/report";
 import { config } from "dotenv";
 import { z } from "zod";
 
 config();
 
-const reportClient = new GetReport(process.env.PROPERTY_ID!);
+const reportClient = new GetReport("294371273");
 
 const dimensionSchema = z.object({
   name: z.string().min(1, "Dimension name is required"),
