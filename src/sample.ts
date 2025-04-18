@@ -1,10 +1,10 @@
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
+import { GetReport, ReportRequest } from "./application/report";
 
 /**
  * TODO(developer): Uncomment this variable and replace with your
  *   Google Analytics 4 property ID before running the sample.
  */
-const propertyId = process.env.PROPERTY_ID;
 
 // Imports the Google Analytics Data API client library.
 
@@ -13,7 +13,8 @@ const propertyId = process.env.PROPERTY_ID;
 const analyticsDataClient = new BetaAnalyticsDataClient();
 
 // Runs a simple report.
-async function runReport() {
+export async function runReport() {
+  const propertyId = process.env.PROPERTY_ID;
   const [response] = await analyticsDataClient.runReport({
     property: `properties/${propertyId}`,
     dateRanges: [
@@ -26,6 +27,9 @@ async function runReport() {
       {
         name: "deviceCategory",
       },
+      {
+        name: "defaultChannelGroup",
+      },
     ],
     metrics: [
       {
@@ -33,6 +37,8 @@ async function runReport() {
       },
     ],
   });
+  console.log("Request result:");
+  console.log(response);
 
   console.log("Report result:");
   if (response.rows)
@@ -41,4 +47,67 @@ async function runReport() {
     });
 }
 
-runReport();
+const report = new GetReport(process.env.PROPERTY_ID!);
+
+const req: ReportRequest = {
+  dateRanges: {
+    startDate: "2025-01-01",
+    endDate: "2025-01-31",
+  },
+  dimensions: [
+    {
+      name: "deviceCategory",
+    },
+  ],
+  metrics: [
+    {
+      name: "activeUsers",
+    },
+  ],
+};
+
+report
+  .execute(req)
+  .then((data) => {
+    console.log(data);
+    if (data.rows) {
+      for (const row of data.rows) {
+        console.log(row);
+      }
+    }
+  })
+  .catch((error) => {
+    console.error("Error executing report:", error);
+  });
+const reports = new GetReport(process.env.PROPERTY_ID!);
+
+const reqs: ReportRequest = {
+  dateRanges: {
+    startDate: "2025-01-01",
+    endDate: "2025-01-31",
+  },
+  dimensions: [
+    {
+      name: "deviceCategory",
+    },
+  ],
+  metrics: [
+    {
+      name: "activeUsers",
+    },
+  ],
+};
+
+reports
+  .execute(req)
+  .then((data) => {
+    console.log(data);
+    if (data.rows) {
+      for (const row of data.rows) {
+        console.log(row);
+      }
+    }
+  })
+  .catch((error) => {
+    console.error("Error executing report:", error);
+  });
